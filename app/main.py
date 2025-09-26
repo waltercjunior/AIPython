@@ -4,6 +4,8 @@ Main FastAPI application entry point.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 from app.api.v1 import users, auth
 from app.config import settings
@@ -35,6 +37,9 @@ def create_app() -> FastAPI:
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
     app.add_middleware(LoggingMiddleware)
 
+    # Mount static files
+    app.mount("/static", StaticFiles(directory="static"), name="static")
+
     # Include routers
     app.include_router(auth.router, prefix=f"{settings.API_V1_STR}/auth", tags=["authentication"])
     app.include_router(users.router, prefix=f"{settings.API_V1_STR}/users", tags=["users"])
@@ -46,11 +51,17 @@ def create_app() -> FastAPI:
 
     @app.get("/")
     async def root():
-        """Root endpoint."""
+        """Serve the main HTML page."""
+        return FileResponse("static/index.html")
+
+    @app.get("/api")
+    async def api_info():
+        """API information endpoint."""
         return {
             "message": "Welcome to AIPython API",
             "version": settings.APP_VERSION,
-            "docs": "/docs"
+            "docs": "/docs",
+            "frontend": "/"
         }
 
     @app.get("/health")

@@ -13,6 +13,7 @@ psycopg2-binary==2.9.9  # PostgreSQL adapter
 # Data Validation
 pydantic==2.5.0
 pydantic-settings==2.1.0
+email-validator==2.1.0  # Email validation for Pydantic
 
 # Authentication & Security
 python-jose[cryptography]==3.3.0
