@@ -1,69 +1,160 @@
-# AIPython
+# AIPython Web API Project
 
-A Python project focused on AI development and machine learning applications.
+A modern Python web API project using FastAPI with clean architecture and design patterns.
 
-## 📋 Table of Contents
+## 🏗️ Architecture
 
-- [About](#about)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+This project follows clean architecture principles with the following layers:
 
-## 🚀 About
+- **API Layer**: FastAPI routes and controllers
+- **Service Layer**: Business logic and use cases
+- **Repository Layer**: Data access abstraction
+- **Domain Layer**: Core business entities
+- **Infrastructure Layer**: External dependencies (database, external APIs)
 
-This project is designed to explore and implement various AI and machine learning concepts using Python. Whether you're working on neural networks, data analysis, or AI applications, this repository provides a solid foundation for your AI development journey.
+## 🚀 Features
 
-## ✨ Features
+- **FastAPI Framework**: Modern, fast web framework for building APIs
+- **Dependency Injection**: Clean separation of concerns
+- **Repository Pattern**: Abstracted data access layer
+- **Service Layer**: Business logic encapsulation
+- **Pydantic Models**: Data validation and serialization
+- **SQLAlchemy ORM**: Database abstraction
+- **Alembic Migrations**: Database schema management
+- **Pytest Testing**: Comprehensive test coverage
+- **Logging**: Structured logging with different levels
+- **Configuration Management**: Environment-based configuration
+- **Error Handling**: Centralized exception handling
+- **API Documentation**: Auto-generated OpenAPI/Swagger docs
 
 ## 🛠️ Installation
 
 ### Prerequisites
 
-- Python 3.8 or higher
+- Python 3.9 or higher
 - pip (Python package installer)
+- PostgreSQL (or SQLite for development)
 
 ### Setup
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/AIPython.git
+   git clone https://github.com/waltercjunior/AIPython.git
    cd AIPython
    ```
 
-2. **Create a virtual environment** (recommended)
+2. **Create a virtual environment**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
 3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+
+5. **Run database migrations**
+   ```bash
+   alembic upgrade head
+   ```
+
+6. **Start the development server**
+   ```bash
+   uvicorn app.main:app --reload
+   ```
 
 ## 📖 Usage
 
-### Basic Usage
+### API Documentation
 
-### Running the Project
+Once the server is running, visit:
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+
+### Example API Calls
 
 ```bash
-python main.py
+# Get all users
+curl -X GET "http://localhost:8000/api/v1/users"
+
+# Create a new user
+curl -X POST "http://localhost:8000/api/v1/users" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "John Doe", "email": "john@example.com"}'
+
+# Get user by ID
+curl -X GET "http://localhost:8000/api/v1/users/1"
 ```
 
 ## 📁 Project Structure
 
 ```
 AIPython/
-├── README.md                 # This file
-├── requirements.txt          # Python dependencies
-├── .gitignore               # Git ignore rules
-├── main.py                  # Main entry point
-├── src/                     # Source code
+├── README.md
+├── requirements.txt
+├── .env.example
+├── .gitignore
+├── alembic.ini
+├── app/
 │   ├── __init__.py
-│   ├── models/              # AI/ML models
-│   ├── utils/               # Utility functions
-│   └── data/                # Data processing
-├── tests/                   # Test files
-├── docs/                    # Documentation
-└── examples/                # Example scripts
+│   ├── main.py                 # FastAPI application entry point
+│   ├── config.py              # Configuration management
+│   ├── database.py            # Database connection
+│   ├── dependencies.py        # Dependency injection
+│   ├── exceptions.py          # Custom exceptions
+│   ├── middleware.py          # Custom middleware
+│   ├── api/                   # API routes
+│   │   ├── __init__.py
+│   │   └── v1/
+│   │       ├── __init__.py
+│   │       ├── users.py
+│   │       └── auth.py
+│   ├── core/                  # Core business logic
+│   │   ├── __init__.py
+│   │   ├── entities/          # Domain entities
+│   │   │   ├── __init__.py
+│   │   │   └── user.py
+│   │   ├── repositories/      # Repository interfaces
+│   │   │   ├── __init__.py
+│   │   │   └── user_repository.py
+│   │   └── services/          # Business services
+│   │       ├── __init__.py
+│   │       └── user_service.py
+│   ├── infrastructure/        # External dependencies
+│   │   ├── __init__.py
+│   │   ├── database/          # Database implementations
+│   │   │   ├── __init__.py
+│   │   │   ├── models.py
+│   │   │   └── repositories/
+│   │   │       ├── __init__.py
+│   │   │       └── user_repository_impl.py
+│   │   └── external/          # External API clients
+│   │       ├── __init__.py
+│   │       └── email_service.py
+│   └── schemas/               # Pydantic models
+│       ├── __init__.py
+│       ├── user.py
+│       └── common.py
+├── alembic/                   # Database migrations
+│   ├── versions/
+│   ├── env.py
+│   └── script.py.mako
+├── tests/                     # Test files
+│   ├── __init__.py
+│   ├── conftest.py
+│   ├── test_api/
+│   ├── test_services/
+│   └── test_repositories/
+└── scripts/                   # Utility scripts
+    ├── init_db.py
+    └── seed_data.py
 ```
 
 ## 🧪 Testing
@@ -71,7 +162,14 @@ AIPython/
 Run the test suite:
 
 ```bash
-python -m pytest tests/
+# Run all tests
+pytest
+
+# Run with coverage
+pytest --cov=app
+
+# Run specific test file
+pytest tests/test_api/test_users.py
 ```
 
 ## 📊 Contributing
@@ -99,6 +197,7 @@ We welcome contributions! Please follow these steps:
 - Write meaningful commit messages
 - Add tests for new features
 - Update documentation as needed
+- Use type hints throughout the codebase
 
 ## 📝 License
 
@@ -130,11 +229,12 @@ If you have any questions or need help:
 
 ## 📈 Roadmap
 
-- [ ] Add more AI/ML algorithms
-- [ ] Implement data visualization tools
-- [ ] Create comprehensive documentation
-- [ ] Add Docker support
+- [ ] Add authentication and authorization
+- [ ] Implement caching with Redis
+- [ ] Add API rate limiting
+- [ ] Create Docker configuration
+- [ ] Add CI/CD pipeline
 - [ ] Performance optimizations
-
+- [ ] Add monitoring and metrics
 
 *Last updated: [Current Date]*
