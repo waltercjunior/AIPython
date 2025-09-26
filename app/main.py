@@ -59,6 +59,11 @@ def create_app() -> FastAPI:
     async def wosa_interface():
         """Serve the WOSA interface page."""
         return FileResponse("static/wosa.html")
+    
+    @app.get("/wosa-docs")
+    async def wosa_documentation():
+        """Serve the WOSA documentation page."""
+        return FileResponse("static/wosa-docs.html")
 
     @app.get("/api")
     async def api_info():

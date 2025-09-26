@@ -22,8 +22,8 @@ class TopicStats(BaseModel):
     total_messages: int = 0
 
 
-class TopicData(BaseModel):
-    """Schema for topic data from JSON."""
+class TopicObject(BaseModel):
+    """Schema for topic object from JSON."""
     bridged_topic: Optional[str] = None
     consumers: List[str] = []
     missing_consumers: List[str] = []
@@ -31,6 +31,12 @@ class TopicData(BaseModel):
     name: str
     producers: List[str] = []
     stats: TopicStats
+
+
+class TopicData(BaseModel):
+    """Schema for topic data from JSON."""
+    name: str
+    object: TopicObject
 
 
 class WOSAReportData(BaseModel):

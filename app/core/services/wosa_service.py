@@ -15,7 +15,7 @@ from app.infrastructure.database.wosa_models import (
 )
 from app.schemas.wosa_schemas import (
     WOSAReportData, FileUploadRequest, ProcessingResult,
-    TopicData, TopicStats
+    TopicData, TopicObject, TopicStats
 )
 from app.exceptions import ValidationError, NotFoundError, ConflictError
 
@@ -119,18 +119,21 @@ class WOSATopicService:
         
         for topic_data in topics_data:
             try:
+                # Extract topic object data
+                topic_object = topic_data.object
+                
                 # Check if topic already exists
                 existing_topic = self.db.query(Topic).filter(
-                    Topic.name == topic_data.name
+                    Topic.name == topic_object.name
                 ).first()
                 
                 if existing_topic:
                     # Update existing topic
-                    await self._update_topic(existing_topic, topic_data, file_id)
+                    await self._update_topic(existing_topic, topic_object, file_id)
                     result.topics_updated += 1
                 else:
                     # Create new topic
-                    await self._create_topic(topic_data, file_id)
+                    await self._create_topic(topic_object, file_id)
                     result.topics_created += 1
                     
             except Exception as e:
@@ -139,15 +142,15 @@ class WOSATopicService:
         result.status = "completed"
         return result
     
-    async def _create_topic(self, topic_data: TopicData, file_id: int) -> Topic:
+    async def _create_topic(self, topic_object: TopicObject, file_id: int) -> Topic:
         """Create a new topic."""
         
         topic = Topic(
-            name=topic_data.name,
+            name=topic_object.name,
             file_id=file_id,
-            bridged_topic=topic_data.bridged_topic,
-            environment=self._detect_environment(topic_data.name),
-            **topic_data.stats.dict()
+            bridged_topic=topic_object.bridged_topic,
+            environment=self._detect_environment(topic_object.name),
+            **topic_object.stats.dict()
         )
         
         self.db.add(topic)
@@ -155,7 +158,7 @@ class WOSATopicService:
         self.db.refresh(topic)
         
         # Create producers
-        for producer_name in topic_data.producers:
+        for producer_name in topic_object.producers:
             producer = TopicProducer(
                 topic_id=topic.id,
                 producer_name=producer_name
@@ -163,7 +166,7 @@ class WOSATopicService:
             self.db.add(producer)
         
         # Create consumers
-        for consumer_name in topic_data.consumers:
+        for consumer_name in topic_object.consumers:
             consumer = TopicConsumer(
                 topic_id=topic.id,
                 consumer_name=consumer_name
@@ -171,7 +174,7 @@ class WOSATopicService:
             self.db.add(consumer)
         
         # Create missing producers
-        for producer_name in topic_data.missing_producers:
+        for producer_name in topic_object.missing_producers:
             missing_producer = MissingProducer(
                 topic_id=topic.id,
                 producer_name=producer_name
@@ -179,7 +182,7 @@ class WOSATopicService:
             self.db.add(missing_producer)
         
         # Create missing consumers
-        for consumer_name in topic_data.missing_consumers:
+        for consumer_name in topic_object.missing_consumers:
             missing_consumer = MissingConsumer(
                 topic_id=topic.id,
                 consumer_name=consumer_name
@@ -191,26 +194,26 @@ class WOSATopicService:
             topic_id=topic.id,
             file_id=file_id,
             action="created",
-            changes={"name": topic_data.name}
+            changes={"name": topic_object.name}
         )
         self.db.add(history)
         
         self.db.commit()
         return topic
     
-    async def _update_topic(self, topic: Topic, topic_data: TopicData, file_id: int) -> Topic:
+    async def _update_topic(self, topic: Topic, topic_object: TopicObject, file_id: int) -> Topic:
         """Update an existing topic."""
         
         # Track changes
         changes = {}
         
         # Update basic fields
-        if topic.bridged_topic != topic_data.bridged_topic:
-            changes["bridged_topic"] = topic_data.bridged_topic
-            topic.bridged_topic = topic_data.bridged_topic
+        if topic.bridged_topic != topic_object.bridged_topic:
+            changes["bridged_topic"] = topic_object.bridged_topic
+            topic.bridged_topic = topic_object.bridged_topic
         
         # Update stats
-        stats_dict = topic_data.stats.dict()
+        stats_dict = topic_object.stats.dict()
         for field, value in stats_dict.items():
             if getattr(topic, field) != value:
                 changes[field] = value

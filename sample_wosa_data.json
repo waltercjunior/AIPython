@@ -1,0 +1,107 @@
+{
+  "created_at": "2025-01-17T08:55:39.690046",
+  "topics": [
+    {
+      "name": "prv-ferren-debeizium-status",
+      "object": {
+        "bridged_topic": null,
+        "consumers": [],
+        "missing_consumers": [],
+        "missing_producers": [
+          "ferren"
+        ],
+        "name": "prv-ferren-debeizium-status",
+        "producers": [],
+        "stats": {
+          "average_message_size": 0,
+          "cleanup_policy": "compact",
+          "estimated_size": 0,
+          "last_message_date": "0001-01-01T00:00:00Z",
+          "last_stat_retrieval_date": "2025-01-17T08:47:42.926Z",
+          "maximum_message_size": 0,
+          "messages_last_30d": 0,
+          "minimum_message_size": 0,
+          "partition_number": 5,
+          "replication_factor": 3,
+          "retention": "66960000000",
+          "total_messages": 0
+        }
+      }
+    },
+    {
+      "name": "prod-user-events",
+      "object": {
+        "bridged_topic": null,
+        "consumers": ["user-service", "analytics-service"],
+        "missing_consumers": [],
+        "missing_producers": [],
+        "name": "prod-user-events",
+        "producers": ["user-api"],
+        "stats": {
+          "average_message_size": 1024,
+          "cleanup_policy": "delete",
+          "estimated_size": 1048576,
+          "last_message_date": "2025-01-16T15:30:00Z",
+          "last_stat_retrieval_date": "2025-01-17T08:47:42.926Z",
+          "maximum_message_size": 2048,
+          "messages_last_30d": 15000,
+          "minimum_message_size": 512,
+          "partition_number": 3,
+          "replication_factor": 3,
+          "retention": "604800000",
+          "total_messages": 50000
+        }
+      }
+    },
+    {
+      "name": "dev-payment-processing",
+      "object": {
+        "bridged_topic": "payment-bridge",
+        "consumers": ["payment-processor"],
+        "missing_consumers": ["notification-service"],
+        "missing_producers": [],
+        "name": "dev-payment-processing",
+        "producers": ["payment-gateway", "billing-service"],
+        "stats": {
+          "average_message_size": 2048,
+          "cleanup_policy": "compact",
+          "estimated_size": 2097152,
+          "last_message_date": "2025-01-15T10:20:00Z",
+          "last_stat_retrieval_date": "2025-01-17T08:47:42.926Z",
+          "maximum_message_size": 4096,
+          "messages_last_30d": 5000,
+          "minimum_message_size": 1024,
+          "partition_number": 2,
+          "replication_factor": 2,
+          "retention": "259200000",
+          "total_messages": 15000
+        }
+      }
+    },
+    {
+      "name": "e2e-test-events",
+      "object": {
+        "bridged_topic": null,
+        "consumers": [],
+        "missing_consumers": ["test-consumer"],
+        "missing_producers": ["test-producer"],
+        "name": "e2e-test-events",
+        "producers": [],
+        "stats": {
+          "average_message_size": 0,
+          "cleanup_policy": "delete",
+          "estimated_size": 0,
+          "last_message_date": "2024-12-01T00:00:00Z",
+          "last_stat_retrieval_date": "2025-01-17T08:47:42.926Z",
+          "maximum_message_size": 0,
+          "messages_last_30d": 0,
+          "minimum_message_size": 0,
+          "partition_number": 1,
+          "replication_factor": 1,
+          "retention": "86400000",
+          "total_messages": 0
+        }
+      }
+    }
+  ]
+}
