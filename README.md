@@ -26,6 +26,9 @@ This project follows clean architecture principles with the following layers:
 - **Configuration Management**: Environment-based configuration
 - **Error Handling**: Centralized exception handling
 - **API Documentation**: Auto-generated OpenAPI/Swagger docs
+- **WOSA Reports System**: Complete system for processing and analyzing WOSA JSON reports
+- **User Management**: Full CRUD operations for user management
+- **Modern Web Interface**: Beautiful HTML5/CSS3/JavaScript frontend
 
 ## 🛠️ Installation
 

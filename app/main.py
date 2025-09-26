@@ -7,7 +7,7 @@ from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
-from app.api.v1 import users, auth
+from app.api.v1 import users, auth, wosa
 from app.config import settings
 from app.database import create_tables
 from app.middleware import LoggingMiddleware
@@ -43,6 +43,7 @@ def create_app() -> FastAPI:
     # Include routers
     app.include_router(auth.router, prefix=f"{settings.API_V1_STR}/auth", tags=["authentication"])
     app.include_router(users.router, prefix=f"{settings.API_V1_STR}/users", tags=["users"])
+    app.include_router(wosa.router, prefix=f"{settings.API_V1_STR}/wosa", tags=["wosa-reports"])
 
     @app.on_event("startup")
     async def startup_event():
@@ -53,6 +54,11 @@ def create_app() -> FastAPI:
     async def root():
         """Serve the main HTML page."""
         return FileResponse("static/index.html")
+    
+    @app.get("/wosa")
+    async def wosa_interface():
+        """Serve the WOSA interface page."""
+        return FileResponse("static/wosa.html")
 
     @app.get("/api")
     async def api_info():

@@ -52,6 +52,10 @@ python scripts/init_db.py
 echo "🔄 Running database migrations..."
 alembic upgrade head
 
+# Initialize WOSA basic data
+echo "🏗️ Initializing WOSA basic data..."
+python scripts/init_wosa_data.py
+
 # Seed database with sample data
 echo "🌱 Seeding database with sample data..."
 python scripts/seed_data.py
@@ -65,6 +69,9 @@ echo "  uvicorn app.main:app --reload"
 echo ""
 echo "API documentation will be available at:"
 echo "  http://localhost:8000/docs"
+echo ""
+echo "WOSA Reports interface:"
+echo "  http://localhost:8000/wosa"
 echo ""
 echo "To run tests:"
 echo "  pytest"

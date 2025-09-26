@@ -1,0 +1,11 @@
+Reports WOSA
+    Sem produtor                                    01 - Identificar tópicos sem produtor
+    Sem consumidor                                  02 - Identificar tópicos sem consumidor
+    + 30 dias sem msg                               03 - Identificar tópicos com mais de 30 dias sem mensagem  
+    + 60 dias sem msg                               04 - Identificar tópicos com mais de 60 dias sem mensagem
+    + 90 dias sem msg                               05 - Identificar tópicos com mais de 90 dias sem mensagem
+    Mais de um produtor                             06 - Identificar tópicos com mais de um produtor
+    Sem AC registrado no Vlad Producer / Consumer   07 - Identificar tópicos sem AC registrado no Vlad Producer / Consumer
+    Não documentado                                 08 - Identificar tópicos não documentados
+    Alterados 30/60/90 dias                         09 - Identificar tópicos com mais de 30/60/90 dias de alteração 
+    Ambientes Dev / Prod / E2E                      10 - Identificar tópicos com ambiente diferente de Dev / Prod / E2E
